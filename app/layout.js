@@ -11,6 +11,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+  <script src="https://api-maps.yandex.ru/3.0/?apikey=e66ee3da-10f4-48de-b7ee-0f8b73801219&lang=ru_RU"></script>
+</head>
       <body className={inter.className}>{children}</body>
     </html>
   )
