@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
     // import OpenStreetMap from '../component/OpenStreetMap'
-    const Map = dynamic(() => import('../Components/Map/Map'), {
+    const Map = dynamic(() => import('../Components/Map'), {
       ssr: false,
     })
 export default function Page() {
