@@ -113,4 +113,8 @@ body::-webkit-scrollbar {
 iframe {
   width: 100%;
   height: 100%;
+
+.leaflet-control-attribution{
+  display: none !important;
+
 }
