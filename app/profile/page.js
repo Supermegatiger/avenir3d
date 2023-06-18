@@ -12,7 +12,7 @@ export default function Profile() {
         <Header/>
 
 
-        <div className="bg-[#353535] p-10 rounded-[40px] flex flex-col">
+        <div className="bg-[#353535] p-10 rounded-[40px] flex flex-col sh">
 
             <div className="lg:text-3xl mb-10 text-[#BED82F]">
                 <div className={unbounded.className}>
@@ -74,7 +74,7 @@ export default function Profile() {
 
         {/* analyze */}
 
-        <div className="bg-[#353535] p-10 rounded-[40px] mt-16">
+        <div className="bg-[#353535] p-10 rounded-[40px] mt-16 sh">
             <div className="lg:text-3xl mb-10 text-[#BED82F]">
                 <div className={unbounded.className}>
                     Проведенные анализы
@@ -83,7 +83,7 @@ export default function Profile() {
             <div className="overflow-x-scroll">
                 <div className="flex justify-between min-w-[500px]">
                     <div className="flex flex-col w-full">
-                        <div className="text-[#D9D9D9] lg:text-base text-xs border-b-2 border-[#D9D9D9] pb-3 ps-3">ул. Пушкина, 7</div>
+                        <div className="text-[#D9D9D9] lg:text-base text-xs border-b-2 border-[#D9D9D9] pb-3 ps-3">ул. Кропоткина, 50, Краснодар</div>
                         <div className="text-[#909090] lg:text-sm text-[0.6rem] ps-3 pt-1">Объект</div>
                     </div>
                     <div className="flex flex-col w-full">
@@ -91,7 +91,9 @@ export default function Profile() {
                         <div className="text-[#909090] lg:text-sm text-[0.6rem] ps-3 pt-1">Бизнес</div>
                     </div>
                     <div className="flex flex-col">
-                        <div className="border-b-2 lg:text-base text-xs border-[#D9D9D9] pb-3 pe-3">Показать</div>
+                        <div className="border-b-2 lg:text-base text-xs border-[#D9D9D9] pb-3 pe-3">
+                            <a className="hover:text-[#B5B5B5] transition-all" href="/analysis">Показать</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -20,6 +20,10 @@
   display: none;
 }
 
+.sh {
+  border-radius: 40px;
+  box-shadow: 12px 12px 30px -3px rgba(0, 0, 0, 1);
+}
 
 body {
   background-color: #FFFF;
@@ -44,14 +48,15 @@ body::-webkit-scrollbar {
 
 
 .btn-tab {
+  color: #909090;
+  border: 2px solid #2c2c2c;;
+  border-start-end-radius: 25px;
+  border-start-start-radius: 25px;
   font-weight: 600;
   width: 100%;
   height: 100%;
   box-sizing: content-box;
   background-color: transparent;
-  color: #2c2c2c;
-  border: none;
-  border-bottom: 2px solid #2c2c2c;
   transition: all .3s;
   padding: 0 20px;
 }
@@ -64,8 +69,9 @@ body::-webkit-scrollbar {
   background-color: transparent;
   outline: none;
   color: #BED82F;
-  border: none;
-  border-bottom: 2px solid #BED82F;
+  border: 2px solid #BED82F;
+  border-start-end-radius: 25px;
+  border-start-start-radius: 25px;
   transition: all .3s;
 }
 
@@ -92,6 +98,7 @@ body::-webkit-scrollbar {
 
 .content {
   width: 100%;
+  margin-bottom: 200px;
 }
 
 
@@ -107,6 +114,7 @@ body::-webkit-scrollbar {
   .content {
     max-width: 1400px;
     margin: 0 auto;
+    margin-bottom: 200px;
   }
 }
 

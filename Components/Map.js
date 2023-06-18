@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents, Popup, CircleMarker, Circle, Polygon } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -16,7 +16,7 @@ async function getWays(rad, lat,lng, setWays){
 }
 
 
-async function getObjects(rad, lat,lng, setNodes, setWays){
+async function getObjects(rad, lat,lng, setNodes, setWays, callback){
   const res = await fetch(`https://www.overpass-api.de/api/interpreter?data=[out:json];(nwr[amenity](around:${rad}, ${lat}, ${lng});nwr[shop](around:${rad}, ${lat}, ${lng}););out geom;`).then((response) => response.json()).then((data) => {
         var t = []
         data.elements.forEach(el => {
@@ -24,17 +24,20 @@ async function getObjects(rad, lat,lng, setNodes, setWays){
           t.push(el)}
         });
         setNodes(t);
+        if (callback) {
+          callback(t);
+        }
       });
   getWays(rad, lat, lng, setWays )
 }
 
 
-export default function Map() {
-  const kras = [45.031371, 38.974922];
+export default function Map({callback, interactive}) {
+  const kras = [45.0430196, 38.9493056];
   const [position, setPosition] = useState({ lat: kras[0], lng: kras[1] })
   const [nodes, setNodes] = useState([])
   const [ways, setWays] = useState([])
-  const ZOOM_LEVEL = 13
+  const ZOOM_LEVEL = 15
   const mapRef = useRef()
   const [radius, setRadius] = useState(400)
   const [pointR, setPointR] = useState(10)
@@ -64,25 +67,33 @@ export default function Map() {
   }
 const filters = ['all', 'shop', 'cafe', 'restaurant', 'fast_food', 'pharmacy', 'bar', 'school', 'bank', 'atm', 'cinema', 'theatre']
   
-  const filtered = getFiltered()
+  const filtered = getFiltered() 
 
+  useEffect(() => {
+    getObjects(400, ...kras, setNodes, setWays, callback);
+  }, []);
+  
   return (
-    <div className=' flex min-h-full'>
-     <div className=' w-1/5 bg-gray-800 p-11'>
-        <p>Радиус: {radius} метров</p>
-        <input type='range' min={20} max={2000} value={radius} onMouseUp={()=>getObjects(radius, circlePos[0], circlePos[1], setNodes, setWays)}  onChange={(ev)=>{setRadius(ev.target.value)}}/>
-        <br/>
-        <p>Радиус точек: {pointR} метров</p>
-        <input type='range' min={1} max={20} value={pointR} onChange={(ev)=>{setPointR(ev.target.value)}}/>
-        <br/>
-        <button type='button' onClick={()=>{setVisible(!visible)}}>Отображение объектов</button>
-        <ul>
-          {filters.map((filt) => 
-            <li key={filt} className={filter==filt?'cursor-pointer bg-slate-500' :'cursor-pointer hover:bg-slate-500'} onClick={()=>setFilter(filt)}>{filt} : {getLength(filt)}</li>
-          )}
-        </ul>
-      </div>
-    <div className=' w-4/5'>
+    <div className='flex lg:flex-row flex-col min-h-full p-[-5]'>
+
+      {interactive ? 
+        <div className=' lg:w-1/5 w-full p-11'>
+            <p>Радиус: {radius} метров</p>
+            <input type='range' min={20} max={2000} value={radius} onMouseUp={()=>getObjects(radius, circlePos[0], circlePos[1], setNodes, setWays, callback)}  onChange={(ev)=>{setRadius(ev.target.value)}}/>
+            <br/>
+            <p>Радиус точек: {pointR} метров</p>
+            <input type='range' min={1} max={20} value={pointR} onChange={(ev)=>{setPointR(ev.target.value)}}/>
+            <br/>
+            <button type='button' onClick={()=>{setVisible(!visible)}}>Отображение объектов</button>
+            <ul>
+              {filters.map((filt) => 
+                <li key={filt} className={filter==filt?'cursor-pointer bg-slate-500' :'cursor-pointer hover:bg-slate-500'} onClick={()=>setFilter(filt)}>{filt} : {getLength(filt)}</li>
+              )}
+            </ul>
+          </div> : ""}
+
+
+    <div className={interactive ? "w-full h-[500px] lg:h-auto" : "w-full h-[500px] lg:h-auto"}>
       <MapContainer className='h-full w-full'  center={position} zoom={ZOOM_LEVEL} ref={mapRef}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -122,19 +133,21 @@ const filters = ['all', 'shop', 'cafe', 'restaurant', 'fast_food', 'pharmacy', '
             ]}
           ></Marker>
         )}
-        <MyComponent circlePos={circlePos} setWays={setWays} setNodes={setNodes} rad={radius} setCirclePos={setCirclePos}/>
+        <MyComponent circlePos={circlePos} setWays={setWays} setNodes={setNodes} rad={radius} setCirclePos={setCirclePos} callback={callback} interactive={interactive}/>
       </MapContainer>
       </div>
     </div>
   )
 }
 
-function MyComponent({setNodes, setCirclePos, rad, setWays}) {
+function MyComponent({setNodes, setCirclePos, rad, setWays, callback, interactive}) {
   const map = useMapEvents({
     click: (ev) => {
       console.log(ev)
-      setCirclePos([ev.latlng.lat, ev.latlng.lng])
-      getObjects(rad, ev.latlng.lat, ev.latlng.lng, setNodes, setWays);
+      if (interactive) {
+        setCirclePos([ev.latlng.lat, ev.latlng.lng])
+        getObjects(rad, ev.latlng.lat, ev.latlng.lng, setNodes, setWays, callback);
+      }
     },
     // locationfound: (location) => {
     //   console.log('location found:', location)

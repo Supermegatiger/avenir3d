@@ -7,7 +7,7 @@ export default function Page() {
 
   return (
     <main className='h-full'>
-      <Map />
+      <Map interactive={true} />
     </main>
   );
 
